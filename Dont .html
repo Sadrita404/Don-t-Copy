@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hidden Emoji Copy</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-content: center;
+      font-family: system-ui, sans-serif;
+      background: #0b1220;
+      color: #e5eefc;
+    }
+    .card {
+      background: #0f172a;
+      border-radius: 16px;
+      padding: 28px 32px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      max-width: 720px;
+      text-align: center;
+    }
+    .text {
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.2;
+      margin: 0 0 10px 0;
+    }
+    .hint {
+      margin: 8px 0 0 0;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    .copy-btn {
+      margin-top: 16px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: #111b34;
+      color: inherit;
+      cursor: pointer;
+    }
+    .copy-btn:active { transform: translateY(1px); }
+
+    /* Toggle Switch Styles */
+    .theme-toggle {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 10;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    .switch input { display: none; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #333;
+      border-radius: 24px;
+      transition: .3s;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: .3s;
+    }
+    input:checked + .slider {
+      background: #f1c40f;
+    }
+    input:checked + .slider:before {
+      transform: translateX(20px);
+      background: #222;
+    }
+    body.day {
+      background: #f6f8fa;
+      color: #1a2233;
+    }
+    body.day .card {
+      background: #fff;
+      color: #1a2233;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+    body.day .copy-btn {
+      background: #f6f8fa;
+      color: #1a2233;
+      border: 1px solid #dbeafe;
+    }
+  </style>
+  </style>
+</head>
+<body>
+
+  <div class="theme-toggle">
+    <label class="switch">
+      <input type="checkbox" id="themeSwitch" />
+      <span class="slider"></span>
+    </label>
+    <span id="themeLabel">🌙</span>
+  </div>
+
+  <div class="card">
+    <p class="text">Don't Copy</p>
+    <p class="hint">Just For Fun By Sadrita Neogi</p>
+    <button class="copy-btn" onclick="copyNow()">Copy</button>
+  </div>
+
+  <script>
+    function copyNow() {
+      // Copy only the emoji to clipboard
+      const emoji = "🖕";
+      navigator.clipboard.writeText(emoji).catch(() => {
+        const temp = document.createElement("textarea");
+        temp.value = emoji;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+      });
+    }
+
+    // Intercept manual copy (Ctrl+C) on the page
+    document.addEventListener("copy", (e) => {
+      e.preventDefault();
+      e.clipboardData.setData("text/plain", "🖕");
+    });
+
+    // Theme toggle logic
+    const themeSwitch = document.getElementById('themeSwitch');
+    const themeLabel = document.getElementById('themeLabel');
+    function setTheme(day) {
+      if(day) {
+        document.body.classList.add('day');
+        themeLabel.textContent = '☀️';
+      } else {
+        document.body.classList.remove('day');
+        themeLabel.textContent = '🌙';
+      }
+    }
+    themeSwitch.addEventListener('change', (e) => {
+      setTheme(e.target.checked);
+    });
+    // Optionally, remember theme
+    if(localStorage.getItem('theme') === 'day') {
+      themeSwitch.checked = true;
+      setTheme(true);
+    }
+    themeSwitch.addEventListener('change', (e) => {
+      localStorage.setItem('theme', e.target.checked ? 'day' : 'night');
+    });
+  </script>
+</body>
+</html>
